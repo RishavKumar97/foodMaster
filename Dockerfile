@@ -20,7 +20,7 @@ FROM tomcat:8.5.72-jdk8-openjdk-slim
 COPY --from=builder target/Food_Master.war /usr/local/tomcat/webapps/
 
 # Expose port 8080 for Tomcat
-EXPOSE 8080
+EXPOSE 8081
 
 # Start Tomcat when the container runs
 CMD ["catalina.sh", "run"]
