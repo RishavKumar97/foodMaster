@@ -1,0 +1,75 @@
+.card {
+    width: 18rem;
+    margin-bottom: 20px;
+}
+
+.card-text {
+    font-size: 14px;
+}
+.dishesContainer{
+    width: 375px;
+    height: 500px;
+    background: #fff;
+}
+#background  {
+    background-image: url('food_hd.jpg'); /* Path to your image file */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    width: 100%;
+    height: 100vh;
+}
+#background::before 
+{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.dishes-list{
+    padding: 20px 0;
+}
+.dishes{
+    display:flex;
+    align-items: center;
+    cursor: pointer;
+    padding-bottom: 15px;
+}
+.dishes img{
+    width:240px;
+    height:100px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+.dishes .d-details h2{
+    font-size: 10px;
+    color:#1d1d1d;
+}
+.dishes .d-details h3{
+    font-size: 5px;
+}
+.container{
+    width:500px;
+    height:520px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 4px 4px 30px rgba(0,0,0,0.06);
+    padding: 20px;
+    overflow-y:scroll;
+}
+.container::-webkit-scrollbar{
+        display: none;
+}
+.col-md-4{
+    width:500%;
+    height: 100vh;
+    background: rgb(240,239,243);
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: left;
+}
