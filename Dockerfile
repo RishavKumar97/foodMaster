@@ -1,26 +1,18 @@
-#### Builder Stage ####
-FROM maven:3.8.4-jdk-8 AS builder
+FROM registry.access.redhat.com/ubi8/openjdk-17:1.15-1.1682053058 AS builder
 
-# Copy the pom.xml to download dependencies
+# Build dependency offline to streamline build
 COPY pom.xml .
-
-# Download the project dependencies
 RUN mvn dependency:go-offline
 
-# Copy the application source code
-COPY src/ src/
+COPY src src
+RUN mvn package -Dmaven.test.skip=true 
+# compute the created jar name and put it in a known location to copy to the next layer.
+# If the user changes pom.xml to have a different version, or artifactId, this will find the jar 
+RUN grep version /home/jboss/target/maven-archiver/pom.properties | cut -d '=' -f2 >.env-version
+RUN grep artifactId /home/jboss/target/maven-archiver/pom.properties | cut -d '=' -f2 >.env-id
+RUN mv /home/jboss/target/$(cat .env-id)-$(cat .env-version).jar /home/jboss/target/export-run-artifact.jar
 
-# Build the application
-RUN mvn package -Dmaven.test.skip=true
-
-#### Runtime Stage ####
-FROM tomcat:8.5.72-jdk8-openjdk-slim
-
-# Copy the WAR file built in the builder stage to Tomcat's webapps directory
-COPY --from=builder target/Food_Master.war /usr/local/tomcat/webapps/
-
-# Expose port 8080 for Tomcat
-EXPOSE 8080
-
-# Start Tomcat when the container runs
-CMD ["catalina.sh", "run"]
+FROM registry.access.redhat.com/ubi8/openjdk-17-runtime:1.15-1.1682053056
+COPY --from=builder /home/jboss/target/export-run-artifact.jar  /deployments/export-run-artifact.jar
+EXPOSE 8082
+ENTRYPOINT ["/opt/jboss/container/java/run/run-java.sh", "--server.port=8082"]
